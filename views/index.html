@@ -291,7 +291,7 @@
             if (todo) {
                 try {
                     //----------------------exists todo checking----------------------
-                    const response1 = await fetch("https://node-todo-1-1587.onrender.com/getTodos", {
+                    const response1 = await fetch("https://node-todo-2-076c.onrender.com/getTodos", {
                         method: "GET",
                         headers: { "Content-Type": "application/json" }
                     });
@@ -313,7 +313,7 @@
                     //----------------------------------------------------------------
 
                     //-------------------new todo adding------------------------------
-                    const response = await fetch("https://node-todo-1-1587.onrender.com/addTodo", {
+                    const response = await fetch("https://node-todo-2-076c.onrender.com/addTodo", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -349,7 +349,7 @@
 
         let message_no_todods = document.getElementById("message_no_todods");
         //-----------------------rendering the todos---------------------------------
-        fetch("https://node-todo-1-1587.onrender.com/getTodos")
+        fetch("https://node-todo-2-076c.onrender.com/getTodos")
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -387,7 +387,7 @@
                         let clickedId = this.getAttribute("data-id");
                         console.log(clickedId);
                         try {
-                            let response = await fetch(`https://node-todo-1-1587.onrender.com/${clickedId}`, {
+                            let response = await fetch(`https://node-todo-2-076c.onrender.com/delete/${clickedId}`, {
                                 method: "DELETE",
                                 headers: { "Content-Type": "application/json" },
                             })
@@ -413,7 +413,7 @@
                         let clickedId2 = this.getAttribute("data-id");
                         done = true;
                         try {
-                            const response = await fetch(`https://node-todo-1-1587.onrender.com/${clickedId2}`, {
+                            const response = await fetch(`https://node-todo-2-076c.onrender.com/doneTodo/${clickedId2}`, {
                                 method: "PUT",
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify({ done: done })
@@ -460,7 +460,7 @@
                                     return alert("Enter the Todo!")
                                 }
                                 //------------------------------------------------------------------
-                                const response = await fetch(`https://node-todo-1-1587.onrender.com/${clickedId1}`, {
+                                const response = await fetch(`https://node-todo-2-076c.onrender.com/editTodo/${clickedId1}`, {
                                     method: "PUT",
                                     headers: { "Content-Type": "application/json" },
                                     body: JSON.stringify({ todo: update_todo })

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>|| TODO ||</title>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        * {
+            background-color: black;
+            color: white;
+            font-family: monospace;
+            font-style: italic;
+        }
+
+        body {
+            width: 50%;
+            margin: auto;
+            margin-top: 20px;
+        }
+
+        #section {
+            width: 50%;
+            margin: auto;
+            margin-top: 20px;
+            padding: 5px 10px 5px 10px;
+
+            /* border: 1px solid white; */
+            &:hover {
+                box-shadow: 1px 1px 10px white;
+                transition: all 500ms ease-in-out;
+                border-radius: 10px;
+            }
+        }
+
+        #section>h2 {
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        #input {
+            width: -webkit-fill-available;
+            border: 1px solid white;
+            box-shadow: 1px 1px 5px white;
+            font-size: 22px;
+            text-align: center;
+            border-right: none;
+            outline: none;
+        }
+
+        #form {
+            width: 50%;
+            margin: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        #submit {
+            border-right: 1px solid white;
+            border-bottom: 1px solid white;
+            border-top: 1px solid white;
+            font-size: 22px;
+            box-shadow: 1px 1px 5px white;
+            border-left: none;
+        }
+
+        #loader_wrapper {
+            height: 100px;
+            width: 200px;
+            position: absolute;
+            top: 20px;
+            left: -210px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid white;
+            border-radius: 10px;
+            box-shadow: 1px 1px 10px white;
+        }
+
+        #added_message {
+            display: none;
+        }
+
+        #rectangle {
+            height: 50px;
+            width: 50px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid white;
+            border-radius: 10px;
+            animation: rotate 3s infinite linear;
+        }
+
+        #circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid white;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #message_no_todods {
+            display: none;
+            width: 50%;
+            margin: auto;
+            font-size: 25px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #popup_input {
+            width: 200px;
+            height: 150px;
+            background-color: rgb(0, 0, 0);
+            border: 1px solid rgb(255, 255, 255);
+            position: absolute;
+            width: 50%;
+            top: 35%;
+            margin: auto;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0;
+            transition: all 0.5s ease-in;
+
+            &:hover {
+                border-radius: 20px;
+                transition: all 0.5s ease-in;
+            }
+
+        }
+
+        #popup_input>input {
+            width: 250px;
+            border: 1px solid white;
+            box-shadow: 1px 1px 5px white;
+            font-size: 22px;
+            text-align: center;
+            border-right: none;
+            outline: none;
+        }
+
+        #Update {
+            border-right: 1px solid white;
+            border-bottom: 1px solid white;
+            border-top: 1px solid white;
+            font-size: 22px;
+            box-shadow: 1px 1px 5px white;
+            border-left: none;
+        }
+
+        #close {
+            display: flex;
+            position: absolute;
+            top: 10px;
+            font-size: 22px;
+            right: 10px;
+            background-color: transparent;
+            border: none;
+        }
+
+        /* ---------------------------------------------------- mobile responsive CSS code ---------------------------------------------------- */
+        @media only screen and (max-width: 640px) {
+            body {
+                display: flex;
+                width: 100vw;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #section {
+                width: 90vw;
+                padding: 5px 10px 5px 10px;
+            }
+
+            #input {
+                width: auto;
+            }
+
+            #form {
+                width: fit-content;
+            }
+
+
+            #loader_wrapper {
+                height: 100px;
+                display: none;
+                width: 100px;
+                left: 35%;
+                top: 40%;
+                transition: none;
+                box-shadow: none;
+                text-align: center;
+            }
+
+            #rectangle {
+                height: 60px;
+                width: 60px;
+            }
+
+            #circle {
+                width: 40px;
+                height: 40px;
+            }
+
+            #popup_input {
+                width: 90vw;
+                height: 150px;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            #popup_input>input {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ############################# loader ######################################### -->
+    <div id="loader_wrapper">
+        <div id="rectangle">
+            <div id="circle"></div>
+        </div>
+        <h1 id="added_message">Todo added!</h1>
+    </div>
+    <!-- ############################ loader-END ###################################### -->
+
+     <!-- ########################### form for new todo creating ###################### -->
+    <form method="post" id="form">
+        <input type="text" name="input" id="input" placeholder="Enter Todo..." required />
+        <button type="submit" id="submit">ADD</button>
+    </form>
+    <!-- ################################## END form ################################## -->
+
+    <!-- ########################### message for no-todos ##############################-->
+    <section id="message_no_todods">
+        <h1">NO TOODS!</h1>
+    </section>
+    <!-- ################################## END message ############################### -->
+
+    <!-- ########################### edit the todo form ############################### -->
+    <form id="popup_input">
+        <input type="text" name="" id="edit_input" placeholder="Enter the Todo...">
+        <button type="submit" id="Update">UpDate</button>
+        <button type="button" id="close"><ion-icon name="close-outline"></ion-icon></button>
+    </form>
+    <!-- ############################# END the todo form ############################# -->
+
+    <script>
+        let done;
+        //-------------------new todo adding-----------------------------------------
+        let form = document.getElementById("form");
+        form.addEventListener("submit", async function (Event) {
+            Event.preventDefault();
+            const loader_wrapper = document.getElementById("loader_wrapper");
+            const rectangle = document.getElementById("rectangle");
+            const added_message = document.getElementById("added_message");
+            rectangle.style.display = "flex";
+            //responsive for mobile------------------------------------------
+            const isMobile = window.matchMedia("(max-width: 640px)").matches;
+            if (isMobile) {
+                loader_wrapper.style.transform = "none";
+                loader_wrapper.style.display = "flex";
+                
+            } else {
+                loader_wrapper.style.transform = "translateX(220px)";
+                loader_wrapper.style.transition = "transform";
+                loader_wrapper.style.transitionDuration = "1S";
+            }
+            //--------------------------------------------------------------
+            const todo = document.getElementById("input").value;
+            const Current_date = new Date();
+            const Modifyed_Date = { "Date": Current_date.toDateString(), "Time": Current_date.toLocaleTimeString() };
+            const done = false;
+            if (todo) {
+                try {
+                    //----------------------exists todo checking----------------------
+                    const response1 = await fetch("http://localhost:9089/getTodos", {
+                        method: "GET",
+                        headers: { "Content-Type": "application/json" }
+                    });
+                    if (response1.ok) {
+                        const data = await response1.json();
+                        const exists = data.some(item => item.todo === todo);
+                        if (exists) {
+                            const isMobile = window.matchMedia("(max-width: 640px)").matches;
+                            if (isMobile) {
+                                loader_wrapper.style.transform = "none";
+                            } else {
+                                loader_wrapper.style.transform = "translateX(-210px)";
+                            }
+                            return alert("Todo was exsists!")
+                        }
+                    } else {
+                        return alert("ERROR fetching todos!")
+                    }
+                    //----------------------------------------------------------------
+
+                    //-------------------new todo adding------------------------------
+                    const response = await fetch("http://localhost:9089/addTodo", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ todo, Modifyed_Date, done })
+                    })
+                    console.log("Response status:", response.status);
+                    if (response.ok) {
+                        const result = await response.json();
+                        console.log(result);
+                        form.reset();
+                        rectangle.style.display = "none";
+                        added_message.style.display = "flex";
+                        setTimeout(() => {
+                            loader_wrapper.style.transform = "translateX(-250px)";
+                            loader_wrapper.style.transition = "transform";
+                            loader_wrapper.style.transitionDuration = "1S";
+                        }, 2000);
+                        setInterval(()=>{
+                            location.reload();
+                        },3000)
+                    } else {
+                        alert("ERROR!");
+                    }
+                    //----------------------------------------------------------------
+                } catch (error) {
+                    console.error("ERROR: ", error);
+                }
+            } else {
+                alert("Empty!")
+            }
+        });
+
+        let message_no_todods = document.getElementById("message_no_todods");
+        //-----------------------rendering the todos---------------------------------
+        fetch("http://localhost:9089/getTodos")
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                //------------------------todos is empty checking--------------------
+                if (data.length === 0) {
+                    message_no_todods.style.display = "block";
+                }
+                //----------------------todo render on html-file---------------------
+                data.forEach(item => {
+                    let section = document.createElement("section");
+                    section.id = "section";
+                    section.innerHTML += `
+                    <h2 class="todo_value_">${item.todo}</h2>
+                    <p>${item.Date.Time} | ${item.Date.Date}</p>
+                    <button class="done" data-id=${item._id}>Done</button>
+                    <button class="edit" data-id=${item._id} todo-value=${item.todo}>Edit</button>
+                    <button class="delete" data-id=${item._id}>Delete</button>`;
+                    document.body.appendChild(section);
+                    //---------------Done value is true || false checking------------
+                    if (item.Done === true) {
+                        let todo_value_ = section.querySelector(".todo_value_");
+                        todo_value_.style.textDecorationLine = "line-through";
+                        let edit_button = section.querySelectorAll(".edit");
+                        edit_button.forEach(element => {
+                            element.disabled = true;
+                        });
+                    }
+                });
+                //-------------------------------------------------------------------
+
+                //--------------------------deleteing the todos---------------------- 
+                let delete_buttons = document.querySelectorAll(".delete");
+                delete_buttons.forEach(delete_button => {
+                    delete_button.addEventListener("click", async function () {
+                        let clickedId = this.getAttribute("data-id");
+                        console.log(clickedId);
+                        try {
+                            let response = await fetch(`http://localhost:9089/delete/${clickedId}`, {
+                                method: "DELETE",
+                                headers: { "Content-Type": "application/json" },
+                            })
+                            console.log("Response Status:", response.status);
+                            if (response.ok) {
+                                let results = await response.json();
+                                console.log(results);
+                                location.reload();
+                            }
+                        } catch (error) {
+                            console.log("Error:", error);
+                        }
+
+                    })
+                });
+                //------------------------------------------------------------------
+
+                //-------------------------clicking the done value------------------
+                let done_buttons = document.querySelectorAll(".done");
+                done = false;
+                done_buttons.forEach(done_button => {
+                    done_button.addEventListener("click", async function () {
+                        let clickedId2 = this.getAttribute("data-id");
+                        done = true;
+                        try {
+                            const response = await fetch(`http://localhost:9089/doneTodo/${clickedId2}`, {
+                                method: "PUT",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ done: done })
+                            });
+                            console.log("Response Status: ", response.status);
+                            if (response.ok) {
+                                let results = await response.json();
+                                console.log(results);
+                                location.reload()
+                            }
+                        } catch (error) {
+                            console.error("Error:", error);
+                        }
+                    })
+                });
+                //-----------------------------------------------------------------
+
+                //------------------------editing the todos------------------------
+                let edit_buttons = document.querySelectorAll(".edit");
+                edit_buttons.forEach(edit_button => {
+                    edit_button.addEventListener("click", async function () {
+                        let popup_input = document.getElementById("popup_input");
+                        let close = document.getElementById("close");
+                        //------------------------------------------------------
+                        let clickedId1 = this.getAttribute("data-id");
+                        let todoValue = this.getAttribute("todo-value");
+                        //------------------------------------------------------
+                        let edit_input = document.getElementById("edit_input");
+                        let update_button = document.getElementById("Update");
+                        //------------------------------------------------------
+                        popup_input.style.display = "flex";
+                        edit_input.value = todoValue;
+                        //--------------------close the popup-------------------
+                        close.addEventListener("click", function () {
+                            popup_input.style.display = "none";
+                        })
+                        //------------------------------------------------------
+                        popup_input.addEventListener("submit", async function (Event) {
+                            Event.preventDefault();
+                            try {
+                                let update_todo = edit_input.value;
+                                //-----------------popup input was empty checking-------------------
+                                if (update_todo === "") {
+                                    return alert("Enter the Todo!")
+                                }
+                                //------------------------------------------------------------------
+                                const response = await fetch(`http://localhost:9089/editTodo/${clickedId1}`, {
+                                    method: "PUT",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ todo: update_todo })
+                                });
+                                console.log("Respones status: ", response.status);
+                                if (response.ok) {
+                                    let results = await response.json();
+                                    console.log(results);
+                                    popup_input.style.display = "none";
+                                    location.reload();
+                                }
+                            } catch (err) {
+                                console.log("error", err);
+                            }
+                        })
+                    })
+                });
+                //----------------------------------------------------------------------------------
+            })
+            .catch(err => {
+                console.error("error", err);
+            })
+    </script>
+</body>
+
+</html>

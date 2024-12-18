@@ -27,7 +27,6 @@
             margin-top: 20px;
             padding: 5px 10px 5px 10px;
 
-            /* border: 1px solid white; */
             &:hover {
                 box-shadow: 1px 1px 10px white;
                 transition: all 500ms ease-in-out;
@@ -121,53 +120,62 @@
             text-align: center;
         }
 
-        #popup_input {
-            width: 200px;
-            height: 150px;
+        #popup_input_div {
+            height: 100vh;
+            width: 99vw;
             background-color: rgb(0, 0, 0);
-            border: 1px solid rgb(255, 255, 255);
-            position: absolute;
-            width: 50%;
-            top: 35%;
-            margin: auto;
             display: none;
-            justify-content: center;
-            align-items: center;
-            border-radius: 0;
-            transition: all 0.5s ease-in;
-
-            &:hover {
-                border-radius: 20px;
-                transition: all 0.5s ease-in;
-            }
-
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
-        #popup_input>input {
+        #popup_input {
+            width: 50%;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        #popup_input>textarea {
             width: 250px;
             border: 1px solid white;
             box-shadow: 1px 1px 5px white;
             font-size: 22px;
             text-align: center;
-            border-right: none;
             outline: none;
+            height: 200px;
+            width: 550px;
+            text-align: left;
+            transition: all 0.5s ease-in-out;
+            border-radius: 0;
+
+            &:hover {
+                border-radius: 10px;
+                transition: all 0.5s ease-in-out;
+            }
         }
 
         #Update {
-            border-right: 1px solid white;
-            border-bottom: 1px solid white;
-            border-top: 1px solid white;
+            border: 1px solid white;
             font-size: 22px;
-            box-shadow: 1px 1px 5px white;
-            border-left: none;
+            border-radius: 0;
+            transition: all 0.5s ease-in-out;
+
+            &:hover {
+                border-radius: 5px;
+                transition: all 0.5s ease-in-out;
+            }
         }
 
         #close {
             display: flex;
             position: absolute;
-            top: 10px;
+            top: 5px;
             font-size: 22px;
-            right: 10px;
+            right: -5px;
             background-color: transparent;
             border: none;
         }
@@ -216,22 +224,26 @@
                 width: 40px;
                 height: 40px;
             }
+        }
 
-            #popup_input {
-                width: 90vw;
-                height: 150px;
-                flex-direction: column;
-                gap: 10px;
+        @media only screen and (max-width: 900px) {
+            #popup_input_div {
+                width: 100vw;
             }
 
-            #popup_input>input {
-                width: auto;
+            #popup_input {
+                width: 100vw;
+                align-items: center;
+            }
+
+            #popup_input>textarea {
+                width: 98vw;
             }
         }
     </style>
 </head>
 
-<body>
+<body id="body">
     <!-- ############################# loader ######################################### -->
     <div id="loader_wrapper">
         <div id="rectangle">
@@ -241,7 +253,7 @@
     </div>
     <!-- ############################ loader-END ###################################### -->
 
-     <!-- ########################### form for new todo creating ###################### -->
+    <!-- ########################### form for new todo creating ###################### -->
     <form method="post" id="form">
         <input type="text" name="input" id="input" placeholder="Enter Todo..." required />
         <button type="submit" id="submit">ADD</button>
@@ -254,12 +266,14 @@
     </section>
     <!-- ################################## END message ############################### -->
 
-    <!-- ########################### edit the todo form ############################### -->
-    <form id="popup_input">
-        <input type="text" name="" id="edit_input" placeholder="Enter the Todo...">
-        <button type="submit" id="Update">UpDate</button>
-        <button type="button" id="close"><ion-icon name="close-outline"></ion-icon></button>
-    </form>
+    <!-- ########################### edit the todo form & div ############################### -->
+    <div id="popup_input_div">
+        <form id="popup_input">
+            <textarea type="text" id="edit_input" placeholder="Enter the Todo..."></textarea>
+            <button type="submit" id="Update">UpDate</button>
+            <button type="button" id="close"><ion-icon name="close-outline"></ion-icon></button>
+        </form>
+    </div>
     <!-- ############################# END the todo form ############################# -->
 
     <script>
@@ -277,7 +291,7 @@
             if (isMobile) {
                 loader_wrapper.style.transform = "none";
                 loader_wrapper.style.display = "flex";
-                
+
             } else {
                 loader_wrapper.style.transform = "translateX(220px)";
                 loader_wrapper.style.transition = "transform";
@@ -332,9 +346,9 @@
                             loader_wrapper.style.transition = "transform";
                             loader_wrapper.style.transitionDuration = "1S";
                         }, 2000);
-                        setInterval(()=>{
+                        setInterval(() => {
                             location.reload();
-                        },3000)
+                        }, 3000)
                     } else {
                         alert("ERROR!");
                     }
@@ -365,7 +379,7 @@
                     <h2 class="todo_value_">${item.todo}</h2>
                     <p>${item.Date.Time} | ${item.Date.Date}</p>
                     <button class="done" data-id=${item._id}>Done</button>
-                    <button class="edit" data-id=${item._id} todo-value=${item.todo}>Edit</button>
+                    <button class="edit" data-id=${item._id} todo-value="${item.todo}">Edit</button>
                     <button class="delete" data-id=${item._id}>Delete</button>`;
                     document.body.appendChild(section);
                     //---------------Done value is true || false checking------------
@@ -435,7 +449,9 @@
                 let edit_buttons = document.querySelectorAll(".edit");
                 edit_buttons.forEach(edit_button => {
                     edit_button.addEventListener("click", async function () {
-                        let popup_input = document.getElementById("popup_input");
+                        let body = document.getElementById("body");
+                        body.style.overflowY = "hidden";
+                        let popup_input = document.getElementById("popup_input_div");
                         let close = document.getElementById("close");
                         //------------------------------------------------------
                         let clickedId1 = this.getAttribute("data-id");
@@ -449,6 +465,7 @@
                         //--------------------close the popup-------------------
                         close.addEventListener("click", function () {
                             popup_input.style.display = "none";
+                            body.style.overflowY = "scroll";
                         })
                         //------------------------------------------------------
                         popup_input.addEventListener("submit", async function (Event) {

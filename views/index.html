@@ -450,7 +450,11 @@
                 edit_buttons.forEach(edit_button => {
                     edit_button.addEventListener("click", async function () {
                         let body = document.getElementById("body");
-                        body.style.overflowY = "hidden";
+                        document.documentElement.scrollTo({
+                            top: 0,
+                            behavior: 'smooth' // Adds a smooth scroll effect
+                        });
+                        body.style.overflow = "hidden";
                         let popup_input = document.getElementById("popup_input_div");
                         let close = document.getElementById("close");
                         //------------------------------------------------------

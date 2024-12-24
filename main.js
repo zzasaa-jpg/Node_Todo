@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
+require('dotenv').config();
 
 const app = express();
 app.use(express.json());
@@ -11,7 +12,8 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, "connection error"));
 db.once('open', () => console.log("connected!"));
 
-mongoose.connect('mongodb+srv://zzsdrt354:SrQzx3GgKGM9cer@cluster0.fktok.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+console.log(process.env.Mongoose_API)
+mongoose.connect(process.env.Mongoose_API, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });

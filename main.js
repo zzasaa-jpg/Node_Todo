@@ -12,7 +12,6 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, "connection error"));
 db.once('open', () => console.log("connected!"));
 
-console.log(process.env.Mongoose_API)
 mongoose.connect(process.env.Mongoose_API, {
     useNewUrlParser: true,
     useUnifiedTopology: true,

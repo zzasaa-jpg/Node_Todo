@@ -122,12 +122,13 @@
 
         #popup_input_div {
             height: 100vh;
-            width: 99vw;
+            width: 100vw;
             background-color: rgb(0, 0, 0);
             display: none;
             position: absolute;
             top: 0;
             left: 0;
+            z-index: 2
         }
 
         #popup_input {
@@ -180,6 +181,112 @@
             border: none;
         }
 
+        #recycle_bin_btn_wrapper {
+            position: fixed;
+            top: 5px;
+            right: 5px;
+        }
+
+        #recycle_bin_btn {
+            background-color: transparent;
+            border: none;
+            font-size: 25px;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        #recycle_bin_btn ion-icon {
+            display: flex;
+            justify-content: center;
+            border: none;
+        }
+
+        #recycle_bin {
+            width: 400px;
+            height: 95vh;
+            background-color: rgba(255, 255, 255, 0.196);
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translateX(-2000px);
+            transition: all 500ms ease-in-out;
+            padding: 20px;
+        }
+
+        #close_recycle_bin {
+            border: none;
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background-color: transparent;
+            width: 37px;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        #close_recycle_bin ion-icon {
+            display: flex;
+            justify-content: center;
+            background-color: transparent;
+            color: white;
+            font-size: 25px;
+        }
+
+        #recycle_bin_todos {
+            background-color: transparent;
+            margin-top: 50px;
+            width: 380px;
+        }
+
+        .recycle_bin_h2 {
+            background-color: transparent;
+            overflow-wrap: anywhere;
+        }
+
+        #recycle_bin_todos>p {
+            background-color: transparent;
+        }
+
+        .recycle_bin_restore_button {
+            background-color: transparent;
+            border: 1px solid white;
+            border-radius: 2px;
+
+            &:hover {
+                background-color: black;
+                cursor: pointer;
+            }
+        }
+
+        #timer {
+            background-color: transparent;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            margin: 0;
+        }
+
+        .recycle_bin_delete_button {
+            background-color: transparent;
+            border: 1px solid white;
+            border-radius: 2px;
+
+            &:hover {
+                background-color: black;
+                cursor: pointer;
+            }
+        }
+
+        #recycle_bin_message {
+            text-align: center;
+            display: none;
+            background-color: transparent;
+        }
+
         /* ---------------------------------------------------- mobile responsive CSS code ---------------------------------------------------- */
         @media only screen and (max-width: 640px) {
             body {
@@ -202,7 +309,6 @@
             #form {
                 width: fit-content;
             }
-
 
             #loader_wrapper {
                 height: 100px;
@@ -227,10 +333,6 @@
         }
 
         @media only screen and (max-width: 900px) {
-            #popup_input_div {
-                width: 100vw;
-            }
-
             #popup_input {
                 width: 100vw;
                 align-items: center;
@@ -238,6 +340,43 @@
 
             #popup_input>textarea {
                 width: 98vw;
+            }
+
+            #close_recycle_bin {
+                left: 0px;
+            }
+
+            #recycle_bin_btn_wrapper {
+                bottom: 10px;
+                left: 10px;
+                top: auto;
+                right: auto;
+            }
+
+            #recycle_bin_btn ion-icon {
+                border: 1px solid white;
+                border-radius: 3px;
+            }
+
+            #recycle_bin {
+                width: 100vw;
+                height: 98vh;
+                background-color: rgb(0, 0, 0);
+                color: white;
+                padding: 10px;
+            }
+
+            #recycle_bin_todos {
+                width: 95vw;
+            }
+
+            #timer {
+                background-color: transparent;
+                position: absolute;
+                top: 2px;
+                left: 40px;
+                margin: 0;
+
             }
         }
     </style>
@@ -266,7 +405,7 @@
     </section>
     <!-- ################################## END message ############################### -->
 
-    <!-- ########################### edit the todo form & div ############################### -->
+    <!-- ########################### edit the todo form & div ######################### -->
     <div id="popup_input_div">
         <form id="popup_input">
             <textarea type="text" id="edit_input" placeholder="Enter the Todo..."></textarea>
@@ -274,10 +413,23 @@
             <button type="button" id="close"><ion-icon name="close-outline"></ion-icon></button>
         </form>
     </div>
-    <!-- ############################# END the todo form ############################# -->
+    <!-- ############################# END the todo form ############################## -->
+
+    <!-- ############################# recycle_bin section ############################ -->
+    <div id="recycle_bin_btn_wrapper">
+        <button id="recycle_bin_btn"><ion-icon name="refresh-outline"></ion-icon></button>
+    </div>
+    <div id="recycle_bin">
+        <button id="close_recycle_bin"><ion-icon name="close-outline"></ion-icon></button>
+        <div id="recycle_bin_todos"></div>
+        <h1 id="recycle_bin_message">No Todo's</h1>
+        <h1 id="timer"></h1>
+    </div>
+    <!-- ############################# END the recycle_bin section #################### -->
 
     <script>
         let done;
+        const timerDisplay = document.getElementById("timer");
         //-------------------new todo adding-----------------------------------------
         let form = document.getElementById("form");
         form.addEventListener("submit", async function (Event) {
@@ -298,7 +450,7 @@
                 loader_wrapper.style.transitionDuration = "1S";
             }
             //--------------------------------------------------------------
-            const todo = document.getElementById("input").value;
+            const todo = document.getElementById("input").value + " ";
             const Current_date = new Date();
             const Modifyed_Date = { "Date": Current_date.toDateString(), "Time": Current_date.toLocaleTimeString() };
             const done = false;
@@ -310,7 +462,7 @@
                         headers: { "Content-Type": "application/json" }
                     });
                     if (response1.ok) {
-                        const data = await response1.json();
+                        let data = await response1.json();
                         const exists = data.some(item => item.todo === todo);
                         if (exists) {
                             const isMobile = window.matchMedia("(max-width: 640px)").matches;
@@ -401,8 +553,8 @@
                         let clickedId = this.getAttribute("data-id");
                         console.log(clickedId);
                         try {
-                            let response = await fetch(`https://node-todo-2-076c.onrender.com/delete/${clickedId}`, {
-                                method: "DELETE",
+                            let response = await fetch(`http://localhost:9089/recycle_bin/${clickedId}`, {
+                                method: "GET",
                                 headers: { "Content-Type": "application/json" },
                             })
                             console.log("Response Status:", response.status);
@@ -414,8 +566,7 @@
                         } catch (error) {
                             console.log("Error:", error);
                         }
-
-                    })
+                    });
                 });
                 //------------------------------------------------------------------
 
@@ -503,7 +654,165 @@
             })
             .catch(err => {
                 console.error("error", err);
+            });
+        //-----------------------recycle_bin section---------------------------------
+        let recycle_bin_btn = document.getElementById("recycle_bin_btn");
+        let recycle_bin = document.getElementById("recycle_bin");
+        let close_recycle_bin = document.getElementById("close_recycle_bin");
+        let recycle_bin_todos = document.getElementById("recycle_bin_todos");
+        const todo = document.getElementById("input");
+        const add = document.getElementById("submit");
+
+        recycle_bin_btn.addEventListener("click", function () {
+            recycle_bin_btn.style.display = "none";
+            recycle_bin.style.transform = "translateX(0)";
+            todo.disabled = true;
+            add.disabled = true;
+        });
+
+        close_recycle_bin.addEventListener("click", function () {
+            setTimeout(() => {
+                recycle_bin_btn.style.display = "block";
+            }, 600)
+            recycle_bin.style.transform = "translateX(-2000px)";
+            todo.disabled = false;
+            add.disabled = false;
+        });
+        //---------------------------------------------------------------------------
+
+        //------------------------render the recycle_bin todos-----------------------
+        fetch("http://localhost:9089/recycle_bin_todo")
+            .then(response => response.json())
+            .then(data => {
+                //----------------------if recycle_bin is empty----------------------
+                if (data.length == 0) {
+                    let recycle_bin_message = document.getElementById("recycle_bin_message");
+                    recycle_bin_message.style.display = "block";
+                    recycle_bin.style.padding = 0;
+                    recycle_bin.style.height = "100vh";
+                }
+                //-------------------------------------------------------------------
+
+                //---------recycle_bin scroll for data.length > 4--------------------
+                if (data.length > 4) {
+                    recycle_bin.style.overflowY = "auto";
+                }
+                //-------------------------------------------------------------------
+
+                //------------recycle_bin data.length > 0 than start the timer-------
+                if (data.length > 0) {
+                    console.log('recycle ON!');
+                    async function time() {
+                        try {
+                            let response = await fetch("http://localhost:9089/start-timer", {
+                                method: "GET",
+                                headers: { "Content-Type": "application/json" },
+                            })
+                            console.log("Response Status:", response.status);
+                            if (response.ok) {
+                                let results = await response.json();
+                                console.log(results);
+                            }
+                        } catch (error) {
+                            console.error("ERROR:", error)
+                        }
+                    }
+                    time()
+                    //---------------------------------------------------------------
+
+                    //----------recycle_bin time progress render in UI---------------
+                    async function time_progress() {
+                        try {
+                            let response = await fetch("http://localhost:9089/timer-status", {
+                                method: "GET",
+                                headers: { "Content-Type": "application/json" },
+                            })
+                            if (response.ok) {
+                                let results = await response.json();
+                                if (results.timerRunning) {
+                                    recycle_bin_btn.innerText = Math.floor(results.remainingTime / 1000);
+                                    recycle_bin_btn.style.fontStyle = "normal";
+                                    recycle_bin_btn.style.fontWeight = "900";
+                                }
+                                timerDisplay.innerText = `Timer: ${results.remainingTime}`;
+                                if (results.timerRunning == false) {
+                                    clearInterval(interval);
+                                    location.reload();
+                                }
+                            }
+                        } catch (error) {
+                            console.error("ERROR:", error)
+                        }
+                    }
+                    //---------------------------------------------------------------
+
+                    //-----setInterval for timer_progress render every second--------
+                    let interval = setInterval(() => {
+                        time_progress();
+                    }, 1000);
+                    //---------------------------------------------------------------
+                }
+                //-----------------render the recycle_bin todo's---------------------
+                data.forEach(element => {
+                    recycle_bin_todos.innerHTML += `
+                    <h2 class="recycle_bin_h2">${element.todo}</h2>
+                    <p>${element.Date.Time} | ${element.Date.Date}</p>
+                    <button class="recycle_bin_restore_button" restore-data-id=${element._id}>Rstore</button>
+                    <button class="recycle_bin_delete_button" recycle-data-id=${element._id}>Delete</button>`;
+                    //--------------delete the todo inside of recycle_bin-----------------------------------------------------------
+                    let delete_buttons = document.querySelectorAll(".recycle_bin_delete_button");
+                    delete_buttons.forEach(delete_button => {
+                        delete_button.addEventListener("click", async function () {
+                            let clickedId_recycle_bin = this.getAttribute("recycle-data-id");
+                            console.log(clickedId_recycle_bin);
+                            try {
+                                let response = await fetch(`http://localhost:9089/delete/${clickedId_recycle_bin}`, {
+                                    method: "DELETE",
+                                    headers: { "Content-Type": "application/json" },
+                                })
+                                console.log("Response Status:", response.status);
+                                if (response.ok) {
+                                    let results = await response.json();
+                                    console.log(results);
+                                    location.reload();
+                                }
+                            } catch (error) {
+                                console.log("Error:", error);
+                            }
+
+                        })
+                    });
+                    //--------------------------------------------------------------------------------------------------------------
+
+                    //---------------restore the todo inside of recycle_bin---------------------------------------------------------
+                    let restore_buttons = document.querySelectorAll(".recycle_bin_restore_button");
+                    restore_buttons.forEach(restore_button => {
+                        restore_button.addEventListener("click", async function () {
+                            let restore_ID = this.getAttribute("restore-data-id");
+                            console.log(restore_ID);
+                            try {
+                                let response = await fetch(`http://localhost:9089/restore/${restore_ID}`, {
+                                    method: "GET",
+                                    headers: { "Content-Type": "application/json" },
+                                })
+                                console.log("Response Status:", response.status);
+                                if (response.ok) {
+                                    let results = await response.json();
+                                    console.log(results);
+                                    location.reload();
+                                }
+                            } catch (error) {
+                                console.log("Error:", error);
+                            }
+
+                        })
+                    });
+                    //--------------------------------------------------------------------------------------------------------------
+                });
             })
+            .catch(err => {
+                console.error("error", err);
+            });
     </script>
 </body>
 

@@ -553,7 +553,7 @@
                         let clickedId = this.getAttribute("data-id");
                         console.log(clickedId);
                         try {
-                            let response = await fetch(`http://localhost:9089/recycle_bin/${clickedId}`, {
+                            let response = await fetch(`https://node-todo-2-076c.onrender.com/recycle_bin/${clickedId}`, {
                                 method: "GET",
                                 headers: { "Content-Type": "application/json" },
                             })
@@ -681,7 +681,7 @@
         //---------------------------------------------------------------------------
 
         //------------------------render the recycle_bin todos-----------------------
-        fetch("http://localhost:9089/recycle_bin_todo")
+        fetch("https://node-todo-2-076c.onrender.com/recycle_bin_todo")
             .then(response => response.json())
             .then(data => {
                 //----------------------if recycle_bin is empty----------------------
@@ -704,7 +704,7 @@
                     console.log('recycle ON!');
                     async function time() {
                         try {
-                            let response = await fetch("http://localhost:9089/start-timer", {
+                            let response = await fetch("https://node-todo-2-076c.onrender.com/start-timer", {
                                 method: "GET",
                                 headers: { "Content-Type": "application/json" },
                             })
@@ -723,7 +723,7 @@
                     //----------recycle_bin time progress render in UI---------------
                     async function time_progress() {
                         try {
-                            let response = await fetch("http://localhost:9089/timer-status", {
+                            let response = await fetch("https://node-todo-2-076c.onrender.com/timer-status", {
                                 method: "GET",
                                 headers: { "Content-Type": "application/json" },
                             })
@@ -766,7 +766,7 @@
                             let clickedId_recycle_bin = this.getAttribute("recycle-data-id");
                             console.log(clickedId_recycle_bin);
                             try {
-                                let response = await fetch(`http://localhost:9089/delete/${clickedId_recycle_bin}`, {
+                                let response = await fetch(`https://node-todo-2-076c.onrender.com/delete/${clickedId_recycle_bin}`, {
                                     method: "DELETE",
                                     headers: { "Content-Type": "application/json" },
                                 })
@@ -791,7 +791,7 @@
                             let restore_ID = this.getAttribute("restore-data-id");
                             console.log(restore_ID);
                             try {
-                                let response = await fetch(`http://localhost:9089/restore/${restore_ID}`, {
+                                let response = await fetch(`https://node-todo-2-076c.onrender.com/restore/${restore_ID}`, {
                                     method: "GET",
                                     headers: { "Content-Type": "application/json" },
                                 })

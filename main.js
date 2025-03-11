@@ -4,7 +4,7 @@ const cors = require('cors');
 //const mongoose = require('mongoose');
 const path = require('path');
 const { console } = require('inspector');
-const { Todo, RecycleBinTodo } = require(process.env.Schema_Path);
+const { Todo, RecycleBinTodo } = require(require('path').resolve(__dirname, process.env.Schema_Path));
 //console.log( Todo, RecycleBinTodo );
 
 const app = express();

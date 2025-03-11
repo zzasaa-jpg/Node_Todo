@@ -1,40 +1,12 @@
-//require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-//const mongoose = require('mongoose');
 const path = require('path');
 const { console } = require('inspector');
 const { Todo, RecycleBinTodo } = require('./schema.js');
-//console.log( Todo, RecycleBinTodo );
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-
-//const db = mongoose.connection;
-//db.on('error', console.error.bind(console, "connection error"));
-//db.once('open', () => console.log("connected!"));
-
-//mongoose.connect(process.env.Mongoose_API, {
-  //  useNewUrlParser: true,
-   // useUnifiedTopology: true,
-//});
-
-//const TodoSchema = {
- //   todo: String,
-  //  Date: Object,
-    //Done: Boolean,
-//}
-
-//const Todo = mongoose.model("Todos", TodoSchema);
-
-//const recycle_bin_todo_Schema = {
-  //  todo: String,
-    //Date: Object,
-    //Done: Boolean,
-//}
-
-//const RecycleBinTodo = mongoose.model("RecycleBinTodo", recycle_bin_todo_Schema);
 
 let timerStart = null;
 let timer = null;
@@ -111,7 +83,6 @@ app.delete("/delete/:id", async (req, res) => {
             timer = null;
             timerStart = null;
         }
-        
         res.status(200).json({ message: "Todo successfully deleted", deletedTodo: data });
     } catch (error) {
         console.error("error:", error);
@@ -218,4 +189,4 @@ app.get('/timer-status', (req, res) => {
 
 app.listen(9089, () => {
     console.log(`APP RUNNING ON ${9089}`);
-})
+});

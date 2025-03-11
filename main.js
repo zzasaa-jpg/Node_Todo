@@ -1,10 +1,10 @@
-require('dotenv').config();
+//require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 //const mongoose = require('mongoose');
 const path = require('path');
 const { console } = require('inspector');
-const { Todo, RecycleBinTodo } = require(require('path').resolve(__dirname, process.env.Schema_Path));
+const { Todo, RecycleBinTodo } = require('./schema.js');
 //console.log( Todo, RecycleBinTodo );
 
 const app = express();

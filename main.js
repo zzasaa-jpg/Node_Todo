@@ -4,6 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const { console } = require('inspector');
 const { Todo, RecycleBinTodo } = require('./schema.js');
+const port = process.env.port || 7231;
 
 const app = express();
 app.use(express.json());
@@ -188,6 +189,6 @@ app.get('/timer-status', (req, res) => {
     }
 });
 
-app.listen(process.env.port, () => {
-    console.log(`APP RUNNING ON ${process.env.port}`);
+app.listen(port, () => {
+    console.log(`APP RUNNING ON ${port}`);
 });

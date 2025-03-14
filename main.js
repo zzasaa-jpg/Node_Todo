@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -16,7 +17,7 @@ app.get('/', (req, res) => {
 });
 
 app.post("/addTodo", async (req, res) => {
-    const a = { todo, Modifyed_Date, done } = req.body;
+    const { todo, Modifyed_Date, done } = req.body;
     try {
         const todos = new Todo({
             todo: todo,
@@ -187,6 +188,6 @@ app.get('/timer-status', (req, res) => {
     }
 });
 
-app.listen(9089, () => {
-    console.log(`APP RUNNING ON ${9089}`);
+app.listen(process.env.port, () => {
+    console.log(`APP RUNNING ON ${process.env.port}`);
 });
